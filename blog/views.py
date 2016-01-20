@@ -93,17 +93,19 @@ def delmByID(request, me_id, uname, id):
     objectname = bb.path
     print "DELETE============"
     print storage_url
-    print objectname
+    print objectname.split('/')[-1]
     try:
-        client.delete_object(storage_url, auth_token, container, objectname)
-	'''values=(path, name, secfiled, seclevel, stype, token, str(url)+'/%s' % path)
-	content = popen("curl -X DELETE -D- -H 'object_name:%s' -H 'parent_secl_id:%s' -H 'obj_seclevel:%s' -H 'Content-Type:%s' -H '%s' %s" % values).readlines()'''
+        client.delete_object(storage_url, auth_token, container, objectname.split('/')[-1])
+        #values=(path, name, secfiled, seclevel, stype, token, str(url)+'/%s' % path)
+        #print values
+        #content = popen("curl -X DELETE -D- -H 'object_name:%s' -H 'parent_secl_id:%s' -H 'obj_seclevel:%s' -H 'Content-Type:%s' -H '%s' %s" % values).readlines()
         bb.delete()
-	print "DELETE SUCESS"
+        print "DELETE SUCESS"
         messages.add_message(request, messages.INFO, _("Object deleted."))
-    except client.ClientException:
-	print "DELETE fail"
+    except client.ClientException as e:
+        print "DELETE fail",e
         messages.add_message(request, messages.ERROR, _("Access denied."))
+        return HttpResponse(e)
     return HttpResponseRedirect("/meta/id=%s/name=%s" % (me_id, uname))
 
 
@@ -201,16 +203,19 @@ def metaadd(req):
             header['object_name'] = name
             header['parent_secl_id'] = secfiled
             header['obj_seclevel'] = seclevel
-	    print "path=========="+path 
-	    print "name=========="+name
-            print "secfiled======"+secfiled
-            print "seclevel======"+seclevel
-	    print "Url==========="+url
-            print meta_info
+	        #print "path=========="+path 
+	        #print "name=========="+name
+            #print "secfiled======"+secfiled
+            #print "seclevel======"+seclevel
+	        #print "Url==========="+url
+            #print meta_info
             # tt = client.put_object(url, token, contents=mf.cleaned_data['path'], headers=header)
             # return HttpResponse(tt)
+            if token is None:
+                return HttpResponse("Token is timeout, Please try to regain token.")
             values = (path, name, secfiled, seclevel, stype, token, str(url)+'/ytf/%s' % path)
-            content = popen("curl -X PUT -T /home/swift/%s -D- -H 'object_name:%s' -H 'parent_secl_id:%s' -H \
+            print values
+            content = popen("curl -X PUT -T /home/sandy/%s -D- -H 'object_name:%s' -H 'parent_secl_id:%s' -H \
             'obj_seclevel:%s' -H 'Content-Type:%s' -H '%s' %s" % values).readlines()
             return HttpResponse('<h1>%s</h1></ br><p>%s</p>' % (content[0], content[-1]))
     else:

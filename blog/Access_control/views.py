@@ -124,6 +124,8 @@ def adduserfield(req):
             try:
                 Tusersecfieldrelation.objects.create(tu_id=int(uid), secfield_id=secfieldid)
             except Exception as e:
+                if e[0]==1062:
+                    return HttpResponse("该用户已存在，如需更新，请点击更新按钮！")
                 return HttpResponse(e)
             return HttpResponseRedirect('/user_field')
     else:
