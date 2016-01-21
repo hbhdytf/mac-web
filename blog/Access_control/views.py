@@ -199,7 +199,10 @@ def showpolicy(req):
         classname = []
         classids = tp.seclass_id.split(',')
         for classid in classids:
-            if int(classid) == 0:
+            if classid is None or classid == '':
+                classname.append('')
+                continue 
+            elif int(classid) == 0:
                 classname.append('主分类')
             classname.append(Tseclass.objects.get(seclass_id=classid).seclass_name)
         policyinfo[policyid] = [policyid, secname, classname]
@@ -255,6 +258,8 @@ def showapolicy(req, id=None):
     classids = apolicy.seclass_id.split(',')
     classnames = []
     for classid in classids:
+        if classid is None or classid == '':
+            continue
         classnames.append(Tseclass.objects.get(seclass_id=classid).seclass_name)
     policy = [id, fieldname, classnames]
     return render_to_response('updateusfandpolicy.html', {'ufrealtion': policy, 'uu': allclassinfo, 'info': info})

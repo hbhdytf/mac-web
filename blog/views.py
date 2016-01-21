@@ -31,8 +31,11 @@ def main(req):
 
 def test(req):
     uname = req.GET['id'].encode('utf-8')
+    
     a = Tseclass.objects.filter(parent_secl_id=0)
+    #先用三级显示，下面不带父类ID
     det = {}
+    tmp = {}
     for i in range(a.count()):
         seclassid = a.values()[i]['seclass_id']
         name = a.values()[i]['seclass_name']
@@ -47,10 +50,18 @@ def test(req):
                 seclassididid = d.values()[iii]['seclass_id']
                 name11 = d.values()[iii]['seclass_name']
                 detdetdet[name11] = seclassididid
-            detdet[name1] = detdetdet
-        det[name] = detdet
+            #tmp[name1] = seclassidid
+            detdet[(name1,seclassidid)] = detdetdet
+        det[(name,seclassid)] = detdet
     print "det====",det
     return render_to_response('test.html', {'det': det, 'uname': str(uname)})
+    '''
+    root = Tseclass.objects.filter(parent_secl_id=0)
+    tree = {}
+    for i in range(root.count()):
+        id_st = root.values()[i]['secfield_id']
+        name_st = root.values()[i]['secfield_name']
+    '''        
 
 
 def beginAddmeta(req):

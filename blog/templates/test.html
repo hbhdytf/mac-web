@@ -120,19 +120,19 @@
                     </li>
 					{%for name,j in det.items%}
                     <li>
-                        <a href="#{{ name }}" class="nav-header collapsed" data-toggle="collapse">
-                            <i class="glyphicon glyphicon-th-list"></i>{{name}}
+                        <a href="#{{ name.0 }}" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-th-list"></i>{{name.0}}
                         <span class="pull-right glyphicon glyphicon-chevron-down"></span>
                         </a>
                         {%for name1,j1 in j.items %}
                             <li>
-                                <ul href="#{{ name1 }}" id="{{ name }}" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                                <ul href="#{{ name1.0 }}" id="{{ name.0 }}" class="nav nav-list collapse secondmenu" style="height: 0px;">
                             <li>
-                                <a id="{{ name1 }}" href="#{{ name1 }}" class="nav-header collapsed" data-toggle="collapse" onclick="window.top.frames['content'].document.location='/meta/id={{ j1 }}/name={{ uname }}'">
-                                <i class="glyphicon glyphicon-user"></i>{{name1}}
+                                <a id="{{ name1.0 }}" href="#{{ name1.0 }}" class="nav-header collapsed" data-toggle="collapse" onclick="window.top.frames['content'].document.location='/meta/id={{ name1.1 }}/name={{ uname }}'">
+                                <i class="glyphicon glyphicon-user"></i>{{name1.0}}
                                 <span class="pull-right glyphicon glyphicon-chevron-down"></span>
                                 </a>
-                                    <ul id="{{ name1 }}" class="nav nav-list collapse thirdmenu" style="height: 0px;">
+                                    <ul id="{{ name1.0 }}" class="nav nav-list collapse thirdmenu" style="height: 0px;">
                                         {%for name11,j11 in j1.items %}
                                             <li>
                                                 <a href="/meta/id={{ j11 }}/name={{ uname }}" target="content">

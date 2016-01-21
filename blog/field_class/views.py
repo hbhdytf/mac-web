@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse,HttpResponseRedirect
 from django.forms import ModelForm
 from django import forms
-from blog.models import Tsecfield, Tseclass,Tpolicy
+from blog.models import Tsecfield, Tseclass,Tpolicy,Tmeta
 import datetime
 
 
@@ -248,6 +248,11 @@ def delclass(req, id):
             clsid = Tseclass.objects.get(seclass_name=classes).seclass_id
             Tseclass.objects.filter(seclass_id=clsid).update(seclass_id=clsid,parent_secl_id=parid)    
         #class_info.delete()
+        submeta=Tmeta.objects.filter(parent_secl_id=id)
+        print "submeta:",submeta
+        for metas in submeta:
+            print "meta:",metas
+        Tmeta.objects.filter(parent_secl_id=id).update(parent_secl_id=parid)
         sp = Tpolicy.objects.all()
         policyinfo = {}
         for tp in sp:
@@ -260,6 +265,8 @@ def delclass(req, id):
             global has_classid
             has_classid=False
             for classid in classids:
+                if classid is None or classid == '':
+                    continue
                 if int(classid) == int(id):
                     has_classid = True
                 else:
