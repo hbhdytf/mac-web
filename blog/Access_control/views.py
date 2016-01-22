@@ -69,7 +69,7 @@ class Sefield_Form(ModelForm):
     class Meta:
         model = Tuser
         #fields = ('nameofusers', 'nameoffields',)
-	fields = ('nameofusers', )
+        fields = ('nameofusers', )
 
 
 class PolicyForm(ModelForm):
@@ -252,7 +252,17 @@ def delpolicy(req, id):
 
 def showapolicy(req, id=None):
     info = [u'决策更新', u'编号', u'范畴名', u'分类名']
-    allclassinfo = views.ClassForm.allclassinfo
+    #allclassinfo = views.ClassForm.allclassinfo
+    AllClassids = []
+    AllClassNames = []
+    sec_classes = Tseclass.objects.all()
+    for i in sec_classes:
+        AllClassids.append(i.seclass_id)
+        AllClassNames.append(i.seclass_name)
+    classes_info = zip(AllClassids, AllClassNames)
+    allclassinfo = tuple(classes_info)
+    #print "allclassinfo",allclassinfo
+    
     apolicy = Tpolicy.objects.get(idtusersecfieldrelation=id)
     fieldname = Tsecfield.objects.get(secfield_id=apolicy.secfield_id).secfield_name
     classids = apolicy.seclass_id.split(',')

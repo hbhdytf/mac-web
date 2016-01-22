@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse,HttpResponseRedirect
 from django.forms import ModelForm
 from django import forms
-from blog.models import Tsecfield, Tseclass,Tpolicy,Tmeta
+from blog.models import Tsecfield, Tseclass,Tpolicy,Tmeta,Tusersecfieldrelation
 import datetime
 
 
@@ -120,9 +120,28 @@ def addfield(req):
 
 
 def delfield(req, id):
-    print id
+    #print id
     field_info = Tsecfield.objects.get(secfield_id=id)
-    #field_info.delete()
+    users=Tusersecfieldrelation.objects.filter(secfield_id__contains=id)
+    secfieldinfo = {}
+    for i in range(users.count()):
+        uid = users.values()[0]['idtusersecfieldrelation']
+        tuid = users.values()[0]['tu_id']
+        secfid = users.values()[0]['secfield_id'].split(',')
+        secfid.remove(id)
+        if secfid:
+            secfid = ",".join(secfid)
+            Tusersecfieldrelation.objects.filter(idtusersecfieldrelation=uid).update(secfield_id=secfid)
+        else :
+            #print "Only one",secfid
+            Tusersecfieldrelation.objects.filter(idtusersecfieldrelation=uid).delete()
+    #delete policy
+    try:
+        policy = Tpolicy.objects.get(secfield_id=id).delete()
+    except:
+        print "No Policy"
+    #delete secfield 
+    field_info.delete()
     return HttpResponseRedirect('/field')
 
 
